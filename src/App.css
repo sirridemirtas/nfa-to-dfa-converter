@@ -1,3 +1,29 @@
+body {
+  background: #fafafc;
+}
+
 .app {
-  text-align: center;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding: 16px;
+}
+
+.app .actions,
+.app .formal_definition {
+  padding: 16px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  background: #fff;
+}
+
+.app .actions {
+}
+
+.app .formal_definition {
+  _font-family: serif;
+}
+.app fieldset {
+  border: 1px solid #ccc;
 }

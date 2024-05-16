@@ -1,226 +1,291 @@
-import { useState } from "react";
+import { useContext } from "react";
+import { AppContext } from "./store/Context";
+import { AppActions } from "./store/Actions";
+
 import "./App.css";
 
 function App() {
-  const [states, setStates] = useState([]);
+  const { state, dispatch } = useContext(AppContext);
 
   const handleAddState = (e) => {
     e.preventDefault();
+
     const element = document.getElementById("input_state");
-    const state = element.value.trim();
-    if (state && !states.includes(state)) {
-      setStates([...states, state]);
+    const val = element.value.trim();
+
+    if (val && !state.states.includes(val)) {
+      dispatch({
+        type: AppActions.ADD_STATE,
+        payload: val,
+      });
       element.value = "";
     }
   };
 
   const handleDeleteState = (e) => {
     e.preventDefault();
+
     const element = document.getElementById("select_state");
-    const state = element.value.trim();
-    if (state) {
-      setStates(states.filter((s) => s !== state));
+    const val = element.value.trim();
+    if (val) {
+      dispatch({
+        type: AppActions.DELETE_STATE,
+        payload: val,
+      });
     }
   };
-
-  const [startState, setStartState] = useState("");
 
   const handleSelectStartState = (e) => {
     e.preventDefault();
     const element = document.getElementById("select_start_state");
     const startState = element.value.trim();
     if (startState) {
-      setStartState(startState);
+      dispatch({
+        type: AppActions.SET_START_STATE,
+        payload: startState,
+      });
     }
   };
 
-  const [finalStates, setFinalStates] = useState([]);
-
   const handleAddFinalState = (e) => {
     e.preventDefault();
+
     const element = document.getElementById("input_final_state");
     const finalState = element.value.trim();
-    if (finalState && !finalStates.includes(finalState)) {
-      setFinalStates([...finalStates, finalState]);
+
+    if (finalState && !state.finalStates.includes(finalState)) {
+      dispatch({
+        type: AppActions.ADD_FINAL_STATE,
+        payload: finalState,
+      });
       element.value = "";
     }
   };
 
   const handleDeleteFinalState = (e) => {
     e.preventDefault();
+
     const element = document.getElementById("select_final_state");
     const finalState = element.value.trim();
+
     if (finalState) {
-      setFinalStates(finalStates.filter((s) => s !== finalState));
+      dispatch({
+        type: AppActions.DELETE_FINAL_STATE,
+        payload: finalState,
+      });
     }
   };
 
-  const [transitions, setTransitions] = useState({});
-  /* 
-  {
-      "symbol": "A",
-      "source": "q1",
-      "target": "q2"
-    }
-  */
   const handleAddTransition = (e) => {
     e.preventDefault();
+
     const symbol = document.getElementById("input_symbol").value.trim();
     const source = document.getElementById("input_source").value.trim();
     const target = document.getElementById("input_target").value.trim();
+
     if (symbol && source && target) {
-      setTransitions([
-        ...transitions,
-        {
-          symbol,
-          source,
-          target,
+      if (
+        state.transitions.find(
+          // transition format: [symbol, source, target]
+          (t) => t[1] === source && t[0] === symbol && t[2] === target
+        )
+      ) {
+        console.log("Transition already exists");
+        return;
+      }
+
+      dispatch({
+        type: AppActions.ADD_TRANSITION,
+        payload: {
+          symbol: symbol,
+          source: source,
+          target: target,
         },
-      ]);
+      });
     }
   };
 
   return (
     <div className="app">
-      <table>
-        <tr>
-          <td>
-            <form onSubmit={handleAddState}>
-              <fieldset>
-                <legend>Add State</legend>
-                <input type="text" id="input_state" placeholder="State" />
-                <button>Add</button>
-              </fieldset>
-            </form>
-          </td>
-        </tr>
-        {states.length > 0 && ( // select ile seçilen state silinsin
+      <table className="actions">
+        <thead>
+          <tr>
+            <th>
+              <h2>Create NFA</h2>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
           <tr>
             <td>
-              <form onSubmit={handleDeleteState}>
+              <form onSubmit={handleAddState}>
                 <fieldset>
-                  <legend>Delete State</legend>
-                  <select id="select_state">
-                    {/* <option value="">- Select -</option> */}
-                    {states
-                      .slice()
-                      .reverse()
-                      .map((state) => (
-                        <option key={state} value={state}>
-                          {state}
-                        </option>
-                      ))}
-                  </select>
-                  <button className="delete">Delete</button>
+                  <legend>Add State</legend>
+                  <input type="text" id="input_state" placeholder="State" />
+                  <button>Add</button>
                 </fieldset>
               </form>
             </td>
           </tr>
-        )}
-        {states.length > 0 && (
-          <tr>
-            <td>
-              <form onSubmit={handleSelectStartState}>
-                <fieldset>
-                  <legend>Start State</legend>
-                  <select
-                    id="select_start_state"
-                    onChange={handleSelectStartState}
-                  >
-                    <option value="">- Select -</option>
-                    {states.map((state) => (
-                      <option key={state}>{state}</option>
-                    ))}
-                  </select>
-                </fieldset>
-              </form>
-            </td>
-          </tr>
-        )}
-        {states.length > 0 && (
-          <tr>
-            <td>
-              <form onSubmit={handleAddFinalState}>
-                <fieldset>
-                  <legend>Add Final State</legend>
-                  <select id="input_final_state">
-                    <option value="">- Select -</option>
-                    {states
-                      .filter((state) => !finalStates.includes(state))
-                      .map((state) => (
+          {state.states.length > 0 && (
+            <tr>
+              <td>
+                <form onSubmit={handleDeleteState}>
+                  <fieldset>
+                    <legend>Delete State</legend>
+                    <select id="select_state">
+                      {/* <option value="">- Select -</option> */}
+                      {state.states
+                        .slice()
+                        .reverse()
+                        .map((state) => (
+                          <option key={state} value={state}>
+                            {state}
+                          </option>
+                        ))}
+                    </select>
+                    <button className="delete">Delete</button>
+                  </fieldset>
+                </form>
+              </td>
+            </tr>
+          )}
+          {state.states.length > 0 && (
+            <tr>
+              <td>
+                <form onSubmit={handleSelectStartState}>
+                  <fieldset>
+                    <legend>Start State</legend>
+                    <select
+                      id="select_start_state"
+                      onChange={handleSelectStartState}
+                    >
+                      <option value="">- Select -</option>
+                      {state.states.map((state) => (
                         <option key={state}>{state}</option>
                       ))}
-                  </select>
-                  <button>Add</button>
-                </fieldset>
-              </form>
-            </td>
-          </tr>
-        )}
-        {finalStates.length > 0 && (
-          <tr>
-            <td>
-              <form onSubmit={handleDeleteFinalState}>
-                <fieldset>
-                  <legend>Delete Final State</legend>
-                  <select id="select_final_state">
-                    <option value="">- Select -</option>
-                    {finalStates.reverse().map((state) => (
-                      <option key={state}>{state}</option>
-                    ))}
-                  </select>
-                  <button className="delete">Delete</button>
-                </fieldset>
-              </form>
-            </td>
-          </tr>
-        )}
-        {/* {states.length > 0 && (
-          <tr>
-            <td>
-              <form onSubmit={handleAddTransition}>
-                <fieldset>
-                  <legend>Add Transition</legend>
-                  <input type="text" id="input_symbol" placeholder="Symbol" />
-                  <select id="input_source">
-                    <option value="">- Select -</option>
-                    {states.map((state) => (
-                      <option key={state}>{state}</option>
-                    ))}
-                  </select>
-                  <select id="input_target">
-                    <option value="">- Select -</option>
-                    {states.map((state) => (
-                      <option key={state}>{state}</option>
-                    ))}
-                  </select>
-                  <button>Add</button>
-                </fieldset>
-              </form>
-            </td>
-          </tr>
-        )} */}
+                    </select>
+                  </fieldset>
+                </form>
+              </td>
+            </tr>
+          )}
+          {state.states.length > 0 && (
+            <tr>
+              <td>
+                <form onSubmit={handleAddFinalState}>
+                  <fieldset>
+                    <legend>Add Final State</legend>
+                    <select id="input_final_state">
+                      <option value="">- Select -</option>
+                      {state.states
+                        .filter((s) => !state.finalStates.includes(s))
+                        .map((s) => (
+                          <option key={s}>{s}</option>
+                        ))}
+                    </select>
+                    <button>Add</button>
+                  </fieldset>
+                </form>
+              </td>
+            </tr>
+          )}
+          {state.finalStates.length > 0 && (
+            <tr>
+              <td>
+                <form onSubmit={handleDeleteFinalState}>
+                  <fieldset>
+                    <legend>Delete Final State</legend>
+                    <select id="select_final_state">
+                      <option value="">- Select -</option>
+                      {state.finalStates.reverse().map((state) => (
+                        <option key={state}>{state}</option>
+                      ))}
+                    </select>
+                    <button className="delete">Delete</button>
+                  </fieldset>
+                </form>
+              </td>
+            </tr>
+          )}
+          {state.states.length > 0 && (
+            <tr>
+              <td>
+                <form onSubmit={handleAddTransition}>
+                  <fieldset>
+                    <legend>Add Transition</legend>
+                    <input type="text" id="input_symbol" placeholder="Symbol" />
+                    <select id="input_source">
+                      <option value="">- Select -</option>
+                      {state.states.map((s) => (
+                        <option key={s}>{s}</option>
+                      ))}
+                    </select>
+                    <select id="input_target">
+                      <option value="">- Select -</option>
+                      {state.states.map((s) => (
+                        <option key={s}>{s}</option>
+                      ))}
+                    </select>
+                    <button>Add</button>
+                  </fieldset>
+                </form>
+              </td>
+            </tr>
+          )}
+          {state.states.length > 0 && (
+            <tr>
+              <td>
+                <button
+                  onClick={() => {
+                    dispatch({ type: AppActions.RESET });
+                  }}
+                >
+                  Reset DFA
+                </button>
+              </td>
+            </tr>
+          )}
+        </tbody>
       </table>
 
-      <div>
-        {states.length > 0 && (
+      <div className="formal_definition">
+        <h2>NFA Formal Definition</h2>
+        {state.states.length > 0 && (
           <p>
-            <b>Q</b>: {states.join(", ")}
+            <b>Q</b>: {state.states.join(", ")}
           </p>
         )}
-        {startState && (
+        {state.startState && (
           <p>
             <b>
               q<sub>0</sub>
             </b>
-            : {startState}
+            : {state.startState}
           </p>
         )}
-        {finalStates.length > 0 && (
+        {state.finalStates.length > 0 && (
           <p>
-            <b>F</b>: {finalStates.join(", ")}
+            <b>F</b>: {state.finalStates.join(", ")}
           </p>
         )}
+        {state.transitions.length > 0 && (
+          <p>
+            <b>δ</b>:{" "}
+            {state.transitions.map((t, index) => (
+              <span key={index}>
+                δ({t[1]}, {t[0]}) = {"{"}
+                {t[2]}
+                {"}"}
+                {index < state.transitions.length - 1 && ", "}
+              </span>
+            ))}
+          </p>
+        )}
+        <small>
+          States: {state.states.length}, Final States:{" "}
+          {state.finalStates.length}, Transitions: {state.transitions.length}
+        </small>
       </div>
     </div>
   );
