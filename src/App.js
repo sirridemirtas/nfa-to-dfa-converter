@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { AppContext } from "./store/Context";
 import { AppActions } from "./store/Actions";
 
@@ -6,6 +6,11 @@ import "./App.css";
 
 function App() {
   const { state, dispatch } = useContext(AppContext);
+
+  useEffect(() => {
+    // Save the state to the local storage
+    localStorage.setItem("state", JSON.stringify(state));
+  }, [state]);
 
   const handleAddState = (e) => {
     e.preventDefault();
@@ -215,14 +220,22 @@ function App() {
                   <fieldset>
                     <legend>Add Transition</legend>
                     <input type="text" id="input_symbol" placeholder="Symbol" />
+                    <button
+                      onClick={(e) => {
+                        e.preventDefault();
+                        document.getElementById("input_symbol").value = "ε";
+                      }}
+                    >
+                      ε
+                    </button>
                     <select id="input_source">
-                      <option value="">- Select -</option>
+                      <option value="">- Source -</option>
                       {state.states.map((s) => (
                         <option key={s}>{s}</option>
                       ))}
                     </select>
                     <select id="input_target">
-                      <option value="">- Select -</option>
+                      <option value="">- Target -</option>
                       {state.states.map((s) => (
                         <option key={s}>{s}</option>
                       ))}

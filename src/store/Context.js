@@ -11,7 +11,11 @@ export const initialState = {
 };
 
 const AppProvider = ({ children }) => {
-  const [state, dispatch] = useReducer(AppReducer, initialState);
+  const [state, dispatch] = useReducer(
+    AppReducer,
+    // Load the state from the local storage if it exists
+    (initialState, JSON.parse(localStorage.getItem("state")) || initialState)
+  );
 
   return (
     <AppContext.Provider value={{ state, dispatch }}>
