@@ -9,12 +9,16 @@ export const FormalDefinitionNFA = () => {
       <h2>NFA Formal Definition</h2>
       {state.states.length > 0 && (
         <p>
-          <b>Q</b>: {state.states.join(", ")}
+          <b>Q</b>: {"{"}
+          {state.states.join(", ")}
+          {"}"}
         </p>
       )}
       {state.alphabet.length > 0 && (
         <p>
-          <b>Σ</b>: {state.alphabet.join(", ")}
+          <b>Σ</b>: {"{"}
+          {state.alphabet.join(", ")}
+          {"}"}
         </p>
       )}
       {state.startState && (
@@ -27,7 +31,9 @@ export const FormalDefinitionNFA = () => {
       )}
       {state.finalStates.length > 0 && (
         <p>
-          <b>F</b>: {state.finalStates.join(", ")}
+          <b>F</b>: {"{"}
+          {state.finalStates.join(", ")}
+          {"}"}
         </p>
       )}
       {state.transitions.length > 0 && (

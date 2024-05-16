@@ -207,6 +207,7 @@ function App() {
                       placeholder="Symbol"
                     />
                     <button
+                      type="button"
                       onClick={(e) => {
                         e.preventDefault();
                         document.getElementById("input_symbol_add").value = "ε";
@@ -214,7 +215,7 @@ function App() {
                     >
                       ε
                     </button>
-                    <button>Add</button>
+                    <button type="submit">Add</button>
                   </fieldset>
                 </form>
               </td>
@@ -368,6 +369,17 @@ function App() {
 
       <FormalDefinitionNFA />
       <TransitionTableNFA />
+
+      <footer>
+        2024{" · "}Copyleft (ɔ) Sirri Demirtas{" · "}
+        <a
+          href="https://github.com/sirridemirtas/nfa-to-dfa-converter"
+          target="_blank"
+          rel="noreferrer"
+        >
+          View project on GitHub ↗
+        </a>
+      </footer>
     </div>
   );
 }

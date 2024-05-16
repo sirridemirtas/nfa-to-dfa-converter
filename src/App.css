@@ -18,6 +18,7 @@ code {
 .app {
   display: flex;
   flex-direction: row;
+  align-items: flex-start;
   flex-wrap: wrap;
   gap: 16px;
   padding: 16px;
@@ -53,4 +54,25 @@ code {
 .app .tableNFA td {
   border: 1px solid #ccc;
   padding: 8px;
+}
+
+.app .tableNFA th,
+.app .tableNFA tbody tr td:first-child {
+  font-weight: bold;
+  text-align: center;
+  background: #fafafa;
+}
+
+footer {
+  width: 100%;
+  text-align: center;
+  padding: 16px;
+  font-size: 0.8em;
+}
+
+footer a {
+  text-decoration: underline;
+  text-decoration-style: dotted;
+  text-decoration-color: #999;
+  color: inherit;
 }
