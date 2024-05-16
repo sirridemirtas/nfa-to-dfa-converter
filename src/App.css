@@ -1,5 +1,18 @@
 body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  color: #333;
   background: #fafafc;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
 }
 
 .app {
@@ -11,11 +24,14 @@ body {
 }
 
 .app .actions,
-.app .formal_definition {
+.app .formal_definition,
+.app .tableNFA {
   padding: 16px;
   border-radius: 8px;
   border: 1px solid #ccc;
   background: #fff;
+  flex: 1;
+  min-width: 300px;
 }
 
 .app .actions {
@@ -26,4 +42,15 @@ body {
 }
 .app fieldset {
   border: 1px solid #ccc;
+}
+
+.app .tableNFA table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.app .tableNFA th,
+.app .tableNFA td {
+  border: 1px solid #ccc;
+  padding: 8px;
 }

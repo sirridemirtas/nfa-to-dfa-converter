@@ -50,6 +50,7 @@ export const AppReducer = (state, action) => {
         ...state,
         transitions: [
           ...state.transitions,
+          // transition format: [symbol, source, target]
           [action.payload.symbol, action.payload.source, action.payload.target],
         ],
       };
@@ -64,6 +65,23 @@ export const AppReducer = (state, action) => {
 
     case AppActions.RESET:
       return initialState;
+
+    case AppActions.ADD_SYMBOL:
+      return {
+        ...state,
+        alphabet: [...state.alphabet, action.payload],
+      };
+
+    case AppActions.DELETE_SYMBOL:
+      return {
+        ...state,
+        alphabet: state.alphabet.filter((symbol) => symbol !== action.payload),
+
+        // Remove the symbol from the transitions
+        transitions: state.transitions.filter(
+          (transition) => transition[0] !== action.payload
+        ),
+      };
 
     default:
       return state;

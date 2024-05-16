@@ -1,8 +1,12 @@
 import { useContext, useEffect } from "react";
+
 import { AppContext } from "./store/Context";
 import { AppActions } from "./store/Actions";
 
 import "./App.css";
+
+import { FormalDefinitionNFA } from "./components/FormalDefinitionNFA";
+import { TransitionTableNFA } from "./components/TransitionTableNFA";
 
 function App() {
   const { state, dispatch } = useContext(AppContext);
@@ -15,7 +19,7 @@ function App() {
   const handleAddState = (e) => {
     e.preventDefault();
 
-    const element = document.getElementById("input_state");
+    const element = document.getElementById("input_state_add");
     const val = element.value.trim();
 
     if (val && !state.states.includes(val)) {
@@ -30,7 +34,7 @@ function App() {
   const handleDeleteState = (e) => {
     e.preventDefault();
 
-    const element = document.getElementById("select_state");
+    const element = document.getElementById("select_state_delete");
     const val = element.value.trim();
     if (val) {
       dispatch({
@@ -55,7 +59,7 @@ function App() {
   const handleAddFinalState = (e) => {
     e.preventDefault();
 
-    const element = document.getElementById("input_final_state");
+    const element = document.getElementById("input_final_state_add");
     const finalState = element.value.trim();
 
     if (finalState && !state.finalStates.includes(finalState)) {
@@ -70,7 +74,7 @@ function App() {
   const handleDeleteFinalState = (e) => {
     e.preventDefault();
 
-    const element = document.getElementById("select_final_state");
+    const element = document.getElementById("select_final_state_delete");
     const finalState = element.value.trim();
 
     if (finalState) {
@@ -84,9 +88,15 @@ function App() {
   const handleAddTransition = (e) => {
     e.preventDefault();
 
-    const symbol = document.getElementById("input_symbol").value.trim();
-    const source = document.getElementById("input_source").value.trim();
-    const target = document.getElementById("input_target").value.trim();
+    const symbol = document
+      .getElementById("transition__select_symbol")
+      .value.trim();
+    const source = document
+      .getElementById("transition__select_source")
+      .value.trim();
+    const target = document
+      .getElementById("transition__select_target")
+      .value.trim();
 
     if (symbol && source && target) {
       if (
@@ -110,6 +120,36 @@ function App() {
     }
   };
 
+  const handleAddSymbol = (e) => {
+    e.preventDefault();
+
+    const element = document.getElementById("input_symbol_add");
+    const symbol = element.value.trim();
+
+    if (symbol && !state.alphabet.includes(symbol)) {
+      dispatch({
+        type: AppActions.ADD_SYMBOL,
+        payload: symbol,
+      });
+
+      element.value = "";
+    }
+  };
+
+  const handleDeleteSymbol = (e) => {
+    e.preventDefault();
+
+    const element = document.getElementById("select_symbol_delete");
+    const symbol = element.value.trim();
+
+    if (symbol) {
+      dispatch({
+        type: AppActions.DELETE_SYMBOL,
+        payload: symbol,
+      });
+    }
+  };
+
   return (
     <div className="app">
       <table className="actions">
@@ -126,7 +166,7 @@ function App() {
               <form onSubmit={handleAddState}>
                 <fieldset>
                   <legend>Add State</legend>
-                  <input type="text" id="input_state" placeholder="State" />
+                  <input type="text" id="input_state_add" placeholder="State" />
                   <button>Add</button>
                 </fieldset>
               </form>
@@ -138,7 +178,7 @@ function App() {
                 <form onSubmit={handleDeleteState}>
                   <fieldset>
                     <legend>Delete State</legend>
-                    <select id="select_state">
+                    <select id="select_state_delete">
                       {/* <option value="">- Select -</option> */}
                       {state.states
                         .slice()
@@ -148,6 +188,67 @@ function App() {
                             {state}
                           </option>
                         ))}
+                    </select>
+                    <button className="delete">Delete</button>
+                  </fieldset>
+                </form>
+              </td>
+            </tr>
+          )}
+          {
+            <tr>
+              <td>
+                <form onSubmit={handleAddSymbol}>
+                  <fieldset>
+                    <legend>Add Symbol</legend>
+                    <input
+                      type="text"
+                      id="input_symbol_add"
+                      placeholder="Symbol"
+                    />
+                    <button
+                      onClick={(e) => {
+                        e.preventDefault();
+                        document.getElementById("input_symbol_add").value = "ε";
+                      }}
+                    >
+                      ε
+                    </button>
+                    <button>Add</button>
+                  </fieldset>
+                </form>
+              </td>
+            </tr>
+          }
+          {state.alphabet.length > 0 && (
+            <tr>
+              <td>
+                <form onSubmit={handleDeleteSymbol}>
+                  <fieldset>
+                    <legend>Delete Symbol</legend>
+                    <select id="select_symbol_delete">
+                      <option value="">- Select -</option>
+                      {state.alphabet.map((symbol) => (
+                        <option key={symbol}>{symbol}</option>
+                      ))}
+                    </select>
+                    <button className="delete">Delete</button>
+                  </fieldset>
+                </form>
+              </td>
+            </tr>
+          )}
+          {state.alphabet > 0 && (
+            <tr>
+              <td>
+                <form onSubmit={handleDeleteSymbol}>
+                  <fieldset>
+                    <legend>Delete Symbol</legend>
+                    <select id="select_symbol">
+                      <option value="">- Select -</option>
+                      {state.alphabet.map((symbol) => (
+                        <option key={symbol}>{symbol}</option>
+                      ))}
                     </select>
                     <button className="delete">Delete</button>
                   </fieldset>
@@ -181,7 +282,7 @@ function App() {
                 <form onSubmit={handleAddFinalState}>
                   <fieldset>
                     <legend>Add Final State</legend>
-                    <select id="input_final_state">
+                    <select id="input_final_state_add">
                       <option value="">- Select -</option>
                       {state.states
                         .filter((s) => !state.finalStates.includes(s))
@@ -201,7 +302,7 @@ function App() {
                 <form onSubmit={handleDeleteFinalState}>
                   <fieldset>
                     <legend>Delete Final State</legend>
-                    <select id="select_final_state">
+                    <select id="select_final_state_delete">
                       <option value="">- Select -</option>
                       {state.finalStates.reverse().map((state) => (
                         <option key={state}>{state}</option>
@@ -219,22 +320,22 @@ function App() {
                 <form onSubmit={handleAddTransition}>
                   <fieldset>
                     <legend>Add Transition</legend>
-                    <input type="text" id="input_symbol" placeholder="Symbol" />
-                    <button
-                      onClick={(e) => {
-                        e.preventDefault();
-                        document.getElementById("input_symbol").value = "ε";
-                      }}
-                    >
-                      ε
-                    </button>
-                    <select id="input_source">
+                    {/* <input type="text" id="input_symbol" placeholder="Symbol" /> */}
+                    <select id="transition__select_symbol">
+                      <option value="">- Symbol -</option>
+                      <option value="ε">ε</option>
+                      {state.alphabet.map((s) => (
+                        <option key={s}>{s}</option>
+                      ))}
+                    </select>
+
+                    <select id="transition__select_source">
                       <option value="">- Source -</option>
                       {state.states.map((s) => (
                         <option key={s}>{s}</option>
                       ))}
                     </select>
-                    <select id="input_target">
+                    <select id="transition__select_target">
                       <option value="">- Target -</option>
                       {state.states.map((s) => (
                         <option key={s}>{s}</option>
@@ -249,12 +350,15 @@ function App() {
           {state.states.length > 0 && (
             <tr>
               <td>
+                {/* NOTE: The application needs to be reset 
+                when the context structure is changed 
+                because the data in local storage remains the same */}
                 <button
                   onClick={() => {
                     dispatch({ type: AppActions.RESET });
                   }}
                 >
-                  Reset DFA
+                  Reset NFA
                 </button>
               </td>
             </tr>
@@ -262,44 +366,8 @@ function App() {
         </tbody>
       </table>
 
-      <div className="formal_definition">
-        <h2>NFA Formal Definition</h2>
-        {state.states.length > 0 && (
-          <p>
-            <b>Q</b>: {state.states.join(", ")}
-          </p>
-        )}
-        {state.startState && (
-          <p>
-            <b>
-              q<sub>0</sub>
-            </b>
-            : {state.startState}
-          </p>
-        )}
-        {state.finalStates.length > 0 && (
-          <p>
-            <b>F</b>: {state.finalStates.join(", ")}
-          </p>
-        )}
-        {state.transitions.length > 0 && (
-          <p>
-            <b>δ</b>:{" "}
-            {state.transitions.map((t, index) => (
-              <span key={index}>
-                δ({t[1]}, {t[0]}) = {"{"}
-                {t[2]}
-                {"}"}
-                {index < state.transitions.length - 1 && ", "}
-              </span>
-            ))}
-          </p>
-        )}
-        <small>
-          States: {state.states.length}, Final States:{" "}
-          {state.finalStates.length}, Transitions: {state.transitions.length}
-        </small>
-      </div>
+      <FormalDefinitionNFA />
+      <TransitionTableNFA />
     </div>
   );
 }

@@ -8,6 +8,7 @@ export const initialState = {
   startState: "",
   finalStates: [],
   transitions: [],
+  alphabet: [],
 };
 
 const AppProvider = ({ children }) => {
