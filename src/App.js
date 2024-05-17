@@ -161,6 +161,29 @@ function App() {
     }
   };
 
+  const loadSampleData = () => {
+    dispatch({
+      type: AppActions.LOAD_SAMPLE_DATA,
+      payload: {
+        states: ["A", "B", "C"],
+        startState: "A",
+        finalStates: ["C"],
+        transitions: [
+          ["0", "A", "A"],
+          ["1", "A", "B"],
+          ["1", "A", "C"],
+          ["0", "B", "B"],
+          ["1", "B", "A"],
+          ["1", "B", "C"],
+          ["0", "C", "A"],
+          ["0", "C", "B"],
+          ["1", "C", "C"],
+        ],
+        alphabet: ["0", "1"],
+      },
+    });
+  };
+
   return (
     <div className="app">
       <table className="actions">
@@ -397,6 +420,13 @@ function App() {
               </td>
             </tr>
           )}
+          <tr>
+            <td>
+              <button type="button" onClick={loadSampleData}>
+                Load Sample Data
+              </button>
+            </td>
+          </tr>
         </tbody>
       </table>
 

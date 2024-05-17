@@ -28,4 +28,7 @@ export const AppActions = {
 
   // Delete symbol from alphabet (state.alphabet)
   DELETE_SYMBOL: "DELETE_SYMBOL",
+
+  // Load Sample NFA
+  LOAD_SAMPLE_DATA: "LOAD_EXAMPLE",
 };

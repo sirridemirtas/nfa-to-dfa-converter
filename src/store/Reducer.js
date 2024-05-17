@@ -84,6 +84,16 @@ export const AppReducer = (state, action) => {
         ),
       };
 
+    case AppActions.LOAD_SAMPLE_DATA:
+      return {
+        ...state,
+        states: action.payload.states,
+        startState: action.payload.startState,
+        finalStates: action.payload.finalStates,
+        transitions: action.payload.transitions,
+        alphabet: action.payload.alphabet,
+      };
+
     default:
       return state;
   }
