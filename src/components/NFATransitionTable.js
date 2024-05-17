@@ -1,7 +1,29 @@
 import { useContext } from "react";
 import { AppContext } from "../store/Context";
 
-export const TransitionTableNFA = () => {
+/** NFA data structure
+{
+  "states": ["A", "B", "C"],
+  "alphabet": ["0", "1"],
+  "initialState": "A",
+  "acceptStates": ["C"],
+  "transitions": {
+    "A": {
+      "0": ["A"],
+      "1": ["B", "C"]
+    },
+    "B": {
+      "0": ["B"],
+      "1": ["A", "C"]
+    },
+    "C": {
+      "0": ["A", "B"],
+      "1": ["C"]
+    }
+  }
+} */
+
+export const NFATransitionTable = () => {
   const { state } = useContext(AppContext);
 
   const uniqueSymbols = [
@@ -13,7 +35,7 @@ export const TransitionTableNFA = () => {
   ];
 
   return (
-    <div className="tableNFA">
+    <div className="table tableNFA">
       <h2>NFA Transition Table</h2>
       <table>
         <thead>
@@ -27,7 +49,11 @@ export const TransitionTableNFA = () => {
         <tbody>
           {uniqueSourceStates.map((source) => (
             <tr key={source}>
-              <td>{source}</td>
+              <td>
+                {source === state.startState ? "→" : ""}
+                {state.finalStates.includes(source) ? "*" : ""}
+                {source}
+              </td>
               {uniqueSymbols.map((symbol) => (
                 <td key={symbol}>
                   {state.transitions

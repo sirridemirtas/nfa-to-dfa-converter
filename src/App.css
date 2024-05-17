@@ -26,7 +26,8 @@ code {
 
 .app .actions,
 .app .formal_definition,
-.app .tableNFA {
+.app .tableNFA,
+.app .tableDFA {
   padding: 16px;
   border-radius: 8px;
   border: 1px solid #ccc;
@@ -45,19 +46,19 @@ code {
   border: 1px solid #ccc;
 }
 
-.app .tableNFA table {
+.app .table table {
   border-collapse: collapse;
   width: 100%;
 }
 
-.app .tableNFA th,
-.app .tableNFA td {
+.app .table th,
+.app .table td {
   border: 1px solid #ccc;
   padding: 8px;
 }
 
-.app .tableNFA th,
-.app .tableNFA tbody tr td:first-child {
+.app .table th,
+.app .table tbody tr td:first-child {
   font-weight: bold;
   text-align: center;
   background: #fafafa;

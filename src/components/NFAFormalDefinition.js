@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { AppContext } from "../store/Context";
 
-export const FormalDefinitionNFA = () => {
+export const NFAFormalDefinition = () => {
   const { state } = useContext(AppContext);
 
   return (

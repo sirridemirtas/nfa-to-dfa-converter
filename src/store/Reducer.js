@@ -56,11 +56,12 @@ export const AppReducer = (state, action) => {
       };
 
     case AppActions.DELETE_TRANSITION:
-      const newTransitions = { ...state.transitions };
-      delete newTransitions[action.payload.from][action.payload.to];
+      // Remove the transition at the specified index
+      let temp = [...state.transitions];
+      temp.splice(action.payload, 1);
       return {
         ...state,
-        transitions: newTransitions,
+        transitions: temp,
       };
 
     case AppActions.RESET:

@@ -5,8 +5,9 @@ import { AppActions } from "./store/Actions";
 
 import "./App.css";
 
-import { FormalDefinitionNFA } from "./components/FormalDefinitionNFA";
-import { TransitionTableNFA } from "./components/TransitionTableNFA";
+import { NFAFormalDefinition } from "./components/NFAFormalDefinition";
+import { NFATransitionTable } from "./components/NFATransitionTable";
+import { DFATransitionTable } from "./components/DFATransitionTable";
 
 function App() {
   const { state, dispatch } = useContext(AppContext);
@@ -105,7 +106,7 @@ function App() {
           (t) => t[1] === source && t[0] === symbol && t[2] === target
         )
       ) {
-        console.log("Transition already exists");
+        console.warn("Transition already exists");
         return;
       }
 
@@ -118,6 +119,16 @@ function App() {
         },
       });
     }
+  };
+
+  const handleDeleteTransition = (e) => {
+    e.preventDefault();
+
+    dispatch({
+      type: AppActions.DELETE_TRANSITION,
+      // Delete transition by index
+      payload: document.getElementById("select_transition_delete").value,
+    });
   };
 
   const handleAddSymbol = (e) => {
@@ -167,7 +178,7 @@ function App() {
                 <fieldset>
                   <legend>Add State</legend>
                   <input type="text" id="input_state_add" placeholder="State" />
-                  <button>Add</button>
+                  <button type="submit">Add</button>
                 </fieldset>
               </form>
             </td>
@@ -291,7 +302,7 @@ function App() {
                           <option key={s}>{s}</option>
                         ))}
                     </select>
-                    <button>Add</button>
+                    <button type="submit">Add</button>
                   </fieldset>
                 </form>
               </td>
@@ -342,12 +353,33 @@ function App() {
                         <option key={s}>{s}</option>
                       ))}
                     </select>
-                    <button>Add</button>
+                    <button type="submit">Add</button>
                   </fieldset>
                 </form>
               </td>
             </tr>
           )}
+          {state.transitions.length > 0 && (
+            <tr>
+              <td>
+                <form onSubmit={handleDeleteTransition}>
+                  <fieldset>
+                    <legend>Delete Transition</legend>
+                    <select id="select_transition_delete">
+                      <option value="">- Select -</option>
+                      {state.transitions.map((t, i) => (
+                        <option key={t} value={i}>
+                          δ({t[1]}, {t[0]}) → {t[2]}
+                        </option>
+                      ))}
+                    </select>
+                    <button className="delete">Delete</button>
+                  </fieldset>
+                </form>
+              </td>
+            </tr>
+          )}
+
           {state.states.length > 0 && (
             <tr>
               <td>
@@ -355,6 +387,7 @@ function App() {
                 when the context structure is changed 
                 because the data in local storage remains the same */}
                 <button
+                  type="button"
                   onClick={() => {
                     dispatch({ type: AppActions.RESET });
                   }}
@@ -367,9 +400,9 @@ function App() {
         </tbody>
       </table>
 
-      <FormalDefinitionNFA />
-      <TransitionTableNFA />
-
+      <NFAFormalDefinition />
+      <NFATransitionTable />
+      <DFATransitionTable />
       <footer>
         2024{" · "}Copyleft (ɔ) Sirri Demirtas{" · "}
         <a
