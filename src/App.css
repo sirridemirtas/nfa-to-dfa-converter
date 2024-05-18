@@ -28,7 +28,8 @@ code {
 .app .formal_definition,
 .app .tableNFA,
 .app .tableDFA,
-.app .NFAGraph {
+.app .NFAGraph,
+.app .DFAGraph {
   padding: 16px;
   border-radius: 8px;
   border: 1px solid #ccc;

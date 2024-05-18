@@ -1,10 +1,11 @@
 import { useContext } from "react";
 
 import { AppContext } from "../store/Context";
+import { nfaToDfa } from "../lib/nfaToDfa";
 import { FAGraph } from "./FAGraph";
 
-export const NFAGraph = () => {
+export const DFAGraph = () => {
   const { state } = useContext(AppContext);
 
-  return <FAGraph data={state} title={"NFA Graph"} />;
+  return <FAGraph data={nfaToDfa(state)} title={"DFA Graph"} />;
 };

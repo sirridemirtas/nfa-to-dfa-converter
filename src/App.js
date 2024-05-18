@@ -9,6 +9,7 @@ import { NFAFormalDefinition } from "./components/NFAFormalDefinition";
 import { NFATransitionTable } from "./components/NFATransitionTable";
 import { DFATransitionTable } from "./components/DFATransitionTable";
 import { NFAGraph } from "./components/NFAGraph";
+import { DFAGraph } from "./components/DFAGraph";
 
 function App() {
   const { state, dispatch } = useContext(AppContext);
@@ -433,8 +434,9 @@ function App() {
 
       <NFAFormalDefinition />
       <NFATransitionTable />
-      <NFAGraph />
       <DFATransitionTable />
+      <NFAGraph />
+      <DFAGraph />
       <footer>
         2024{" · "}Copyleft (ɔ) Sirri Demirtas{" · "}
         <a
