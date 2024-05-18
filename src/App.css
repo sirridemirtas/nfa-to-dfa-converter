@@ -18,7 +18,7 @@ code {
 .app {
   display: flex;
   flex-direction: row;
-  align-items: flex-start;
+  _align-items: flex-start;
   flex-wrap: wrap;
   gap: 16px;
   padding: 16px;
@@ -27,7 +27,8 @@ code {
 .app .actions,
 .app .formal_definition,
 .app .tableNFA,
-.app .tableDFA {
+.app .tableDFA,
+.app .NFAGraph {
   padding: 16px;
   border-radius: 8px;
   border: 1px solid #ccc;
@@ -36,7 +37,13 @@ code {
   min-width: 300px;
 }
 
-.app .actions {
+.app h2 {
+  margin: 0;
+  margin-bottom: 16px;
+}
+
+.app .actions th {
+  text-align: left;
 }
 
 .app .formal_definition {

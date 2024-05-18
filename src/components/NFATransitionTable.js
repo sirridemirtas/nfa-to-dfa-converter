@@ -6,7 +6,7 @@ import { AppContext } from "../store/Context";
   "states": ["A", "B", "C"],
   "alphabet": ["0", "1"],
   "initialState": "A",
-  "acceptStates": ["C"],
+  "finalStates": ["C"],
   "transitions": {
     "A": {
       "0": ["A"],
