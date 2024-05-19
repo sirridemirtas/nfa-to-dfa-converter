@@ -10,13 +10,18 @@ This tool dynamically converts a defined NFA (Nondeterministic Finite Automaton)
 ### Installation and Usage
 
 To run the project, follow these steps:
-
-1. **Install the dependencies**:
+1. **Clone Project**:
+   ```bash
+   git clone https://github.com/sirridemirtas/nfa-to-dfa-converter.git
+2. **Navigate to the project directory**:
+   ```bash
+   cd nfa-to-dfa-converter
+3. **Install the dependencies**:
    ```bash
    npm install
-2. **Start the development server**:
+4. **Start the development server**:
    ```bash
    npm run start
-3. **Open your browser and navigate to**:
+5. **Open your browser and navigate to**:
    ```bash
    http://localhost:3000
