@@ -8,46 +8,46 @@ export const NFAFormalDefinition = () => {
     <div className="formal_definition">
       <h2>NFA Formal Definition</h2>
       {state.states.length > 0 && (
-        <p>
+        <code>
           <b>Q</b>: {"{"}
           {state.states.join(", ")}
           {"}"}
-        </p>
+        </code>
       )}
       {state.alphabet.length > 0 && (
-        <p>
+        <code>
           <b>Σ</b>: {"{"}
           {state.alphabet.join(", ")}
           {"}"}
-        </p>
+        </code>
       )}
       {state.startState && (
-        <p>
+        <code>
           <b>
             q<sub>0</sub>
           </b>
           : {state.startState}
-        </p>
+        </code>
       )}
       {state.finalStates.length > 0 && (
-        <p>
+        <code>
           <b>F</b>: {"{"}
           {state.finalStates.join(", ")}
           {"}"}
-        </p>
+        </code>
       )}
       {state.transitions.length > 0 && (
-        <p>
+        <code>
           <b>δ</b>:{" "}
           {state.transitions.map((t, index) => (
             <span key={index}>
               δ({t[1]}, {t[0]}) = {"{"}
               {t[2]}
               {"}"}
-              {index < state.transitions.length - 1 && ", "}
+              {index < state.transitions.length - 1 && <br />}
             </span>
           ))}
-        </p>
+        </code>
       )}
       <small>
         States: {state.states.length}, Final States: {state.finalStates.length},

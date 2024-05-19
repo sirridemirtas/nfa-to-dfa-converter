@@ -29,6 +29,9 @@ export const DFATransitionTable = () => {
   return (
     <div className="table tableDFA">
       <h2>DFA Transition Table</h2>
+      <p>
+        <b>→</b>: Start State, <b>*</b>: Final State
+      </p>
       <table>
         <thead>
           <tr>
@@ -43,9 +46,9 @@ export const DFATransitionTable = () => {
             <tr key={source}>
               <td>
                 {JSON.parse(source).join("") === state.startState ? "→" : ""}
-                {state.finalStates.map(JSON.stringify).includes(source)
-                  ? "*"
-                  : ""}
+                {JSON.parse(source).map((s) =>
+                  state.finalStates.includes(s) ? "*" : ""
+                )}
                 {JSON.parse(source).join(", ")}
               </td>
               {tableData.alphabet.map((symbol) => (

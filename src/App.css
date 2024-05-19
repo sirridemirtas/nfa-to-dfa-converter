@@ -1,8 +1,11 @@
 body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+  --font-sans-serif: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
+    "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
+
+  --font-serif: Georgia, "Times New Roman", Times, serif;
+  margin: 0;
+  font-family: var(--font-sans-serif);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
@@ -13,6 +16,16 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
+  display: block;
+  margin: 16px 0;
+}
+
+.font-serif:not(.font-sans-serif) {
+  font-family: var(--font-serif);
+}
+
+.font-sans-serif {
+  font-family: var(--font-sans-serif);
 }
 
 .app {
@@ -25,17 +38,28 @@ code {
 }
 
 .app .actions,
-.app .formal_definition,
+/* .app .formal_definition,
 .app .tableNFA,
-.app .tableDFA,
+.app .tableDFA, */
 .app .NFAGraph,
-.app .DFAGraph {
+.app .DFAGraph,
+.formal_definitions,
+.transition_tables,
+.graphs {
   padding: 16px;
   border-radius: 8px;
   border: 1px solid #ccc;
   background: #fff;
   flex: 1;
-  min-width: 300px;
+  min-width: 380px;
+
+  display: flex;
+  gap: 32px;
+  flex-direction: column;
+}
+
+.graphs {
+  flex: 1;
 }
 
 .app h2 {

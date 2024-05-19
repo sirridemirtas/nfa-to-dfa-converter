@@ -37,6 +37,9 @@ export const NFATransitionTable = () => {
   return (
     <div className="table tableNFA">
       <h2>NFA Transition Table</h2>
+      <p>
+        <b>→</b>: Start State, <b>*</b>: Final State
+      </p>
       <table>
         <thead>
           <tr>
