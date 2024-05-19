@@ -1,0 +1,22 @@
+## NFA to DFA Converter
+
+This tool dynamically converts a defined NFA (Nondeterministic Finite Automaton) to a DFA (Deterministic Finite Automaton), generates the transition table, and visualizes the graph.
+
+### Features:
+- Converts an NFA to its equivalent DFA.
+- Generates and displays the DFA transition table.
+- Renders the DFA as an interactive graph.
+
+### Installation and Usage
+
+To run the project, follow these steps:
+
+1. **Install the dependencies**:
+   ```bash
+   npm install
+2. **Start the development server**:
+   ```bash
+   npm run start
+3. **Open your browser and navigate to**:
+   ```bash
+   http://localhost:3000
