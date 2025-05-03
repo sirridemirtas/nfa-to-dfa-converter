@@ -14,27 +14,34 @@ export const FAGraph = ({ data, title }) => {
   const containerRef = useRef(null);
 
   useEffect(() => {
-    const nodes = states.map((state) => ({
-      id: state,
-      label: state,
-      color: {
-        background: "white",
-        border:
-          startState === state
+    const nodes = states.map((state) => {
+      const isFinal = finalStates.includes(state);
+      const isStart = state === startState;
+      const isStartAndFinal = isStart && isFinal;
+
+      return {
+        id: state,
+        label: state,
+        color: {
+          background: "white",
+          border: isStartAndFinal
+            ? "orange"
+            : isStart
             ? "green"
-            : finalStates.includes(state)
+            : isFinal
             ? "red"
             : "black",
-      },
-      borderWidth:
-        startState === state ? 3 : finalStates.includes(state) ? 3 : 1,
-      title:
-        startState === state
+        },
+        borderWidth: isStartAndFinal ? 3 : isStart ? 3 : isFinal ? 3 : 1,
+        title: isStartAndFinal
+          ? "Start and Final State"
+          : isStart
           ? "Start State"
-          : finalStates.includes(state)
+          : isFinal
           ? "Final State"
           : "State",
-    }));
+      };
+    });
 
     // Create a map of edges
     const edgeMap = new Map();
@@ -114,9 +121,15 @@ export const FAGraph = ({ data, title }) => {
     <div className="NFAGraph">
       <h2>{title}</h2>
       <p>
-        <span style={{ color: "red" }}>Red</span> color represents final states
-        and <span style={{ color: "green" }}>green</span> color represents the
-        start state.
+        Red color represents{" "}
+        <span style={{ color: "red", fontWeight: "bold" }}>final states</span>,
+        green color represents the{" "}
+        <span style={{ color: "green", fontWeight: "bold" }}>start state</span>,
+        and orange color represents a{" "}
+        <span style={{ color: "orange", fontWeight: "bold" }}>
+          state that is simultaneously both the start and a final state
+        </span>
+        .
       </p>
       <div
         ref={containerRef}
