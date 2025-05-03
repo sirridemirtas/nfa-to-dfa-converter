@@ -8,6 +8,7 @@ body {
   font-family: var(--font-sans-serif);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  font-size: 14px;
 
   color: #333;
   background: #fafafc;
@@ -33,8 +34,10 @@ code {
   flex-direction: row;
   _align-items: flex-start;
   flex-wrap: wrap;
-  gap: 16px;
-  padding: 16px;
+  _gap: 16px;
+  _padding: 16px;
+  border-top: 1px solid #ccc;
+  border-left: 1px solid #ccc;
 }
 
 .app .actions,
@@ -47,8 +50,9 @@ code {
 .transition_tables,
 .graphs {
   padding: 16px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
+  _border-radius: 8px;
+  border-right: 1px solid #ccc;
+  border-bottom: 1px solid #ccc;
   background: #fff;
   flex: 1;
   min-width: 380px;
@@ -76,6 +80,10 @@ code {
 }
 .app fieldset {
   border: 1px solid #ccc;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  border-radius: 8px;
 }
 
 .app .table table {

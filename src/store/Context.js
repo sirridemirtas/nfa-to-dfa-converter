@@ -25,7 +25,8 @@ const AppProvider = ({ children }) => {
     AppReducer,
 
     // Load the state from the local storage if it exists
-    (initialState, JSON.parse(localStorage.getItem("state")) || initialState)
+    (initialState,
+    JSON.parse(localStorage.getItem("nfa2dfa_state")) || initialState)
   );
 
   return (

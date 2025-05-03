@@ -5,92 +5,107 @@ export function nfaToDfa({
   startState,
   finalStates,
 }) {
-  const nfa = {
-    states,
-    alphabet,
-    transitions,
-    startState,
-    finalStates,
-  };
+  // Remove epsilon from DFA alphabet if present
+  const dfaAlphabet = alphabet.filter((symbol) => symbol !== "ε");
 
+  // Helper: epsilon closure for a single state
+  function epsilonClosure(state) {
+    const closure = new Set([state]);
+    const stack = [state];
+    while (stack.length > 0) {
+      const curr = stack.pop();
+      for (const [symbol, src, tgt] of transitions) {
+        if (symbol === "ε" && src === curr && !closure.has(tgt)) {
+          closure.add(tgt);
+          stack.push(tgt);
+        }
+      }
+    }
+    return closure;
+  }
+
+  // Helper: epsilon closure for a set of states
+  function epsilonClosureSet(stateSet) {
+    const result = new Set();
+    for (const s of stateSet) {
+      for (const t of epsilonClosure(s)) result.add(t);
+    }
+    return Array.from(result).sort();
+  }
+
+  // Helper: move for a set of states and a symbol
+  function move(stateSet, symbol) {
+    const result = new Set();
+    for (const s of stateSet) {
+      for (const [sym, src, tgt] of transitions) {
+        if (sym === symbol && src === s) result.add(tgt);
+      }
+    }
+    return Array.from(result).sort();
+  }
+
+  // DFA construction
   const dfa = {
     states: [],
-    alphabet: alphabet,
+    alphabet: dfaAlphabet,
     transitions: [],
     startState: "",
     finalStates: [],
+    stateMapping: {}, // { dfaStateStr: { name: "q0", originalStates: [...] } }
   };
 
-  const queue = [];
-  const visited = new Set();
+  const stateNameMap = {};
+  let stateCount = 0;
+  function getStateName(stateArr) {
+    const key = JSON.stringify(stateArr);
+    if (!stateNameMap[key]) {
+      stateNameMap[key] = `q${stateCount++}`;
+    }
+    return stateNameMap[key];
+  }
 
-  // Initialize the start state set with the NFA's start state
-  const startStateSet = [startState];
+  // Start with epsilon closure of start state
+  const startSet = epsilonClosureSet([startState]);
+  const startSetStr = JSON.stringify(startSet);
+  dfa.states.push(startSetStr);
+  dfa.startState = getStateName(startSet);
+  dfa.stateMapping[startSetStr] = {
+    name: dfa.startState,
+    originalStates: startSet,
+  };
 
-  // Convert the start state set to a string for consistency
-  const startStateStr = JSON.stringify(startStateSet);
+  const queue = [startSet];
+  const visited = new Set([startSetStr]);
 
-  // Add the start state to the DFA states
-  dfa.states.push(startStateStr);
-
-  // Set the start state of the DFA
-  dfa.startState = startStateStr;
-
-  // Add the start state set to the queue for processing
-  queue.push(startStateSet);
-
-  // Mark the start state as visited
-  visited.add(startStateStr);
+  if (startSet.some((s) => finalStates.includes(s))) {
+    dfa.finalStates.push(dfa.startState);
+  }
 
   while (queue.length > 0) {
-    // Dequeue the current state set for processing
-    const currentStateSet = queue.shift();
+    const currentSet = queue.shift();
+    const currentSetStr = JSON.stringify(currentSet);
+    const currentName = dfa.stateMapping[currentSetStr].name;
 
-    // Convert the current state set to a string
-    const currentStateStr = JSON.stringify(currentStateSet);
-
-    alphabet.forEach((symbol) => {
-      // For each symbol in the alphabet, calculate the new state set
-      const newStateSet = currentStateSet.reduce((acc, state) => {
-        // Find transitions for the current symbol and state
-        const transitionsFromState = nfa.transitions.filter(
-          ([s, src]) => s === symbol && src === state
-        );
-
-        // Get the target states from these transitions
-        const newStates = transitionsFromState.map(
-          ([_s, _src, target]) => target
-        );
-
-        return [...acc, ...newStates];
-      }, []);
-
-      if (newStateSet.length === 0) return;
-
-      // Remove duplicates and sort the new state set
-      const uniqueNewStateSet = [...new Set(newStateSet)].sort();
-
-      // Convert the new state set to a string
-      const uniqueNewStateStr = JSON.stringify(uniqueNewStateSet);
-
-      // Add the transition to the DFA transitions
-      dfa.transitions.push([symbol, currentStateStr, uniqueNewStateStr]);
-
-      if (!visited.has(uniqueNewStateStr)) {
-        // If the new state set has not been visited,
-        // add it to DFA states and queue
-        dfa.states.push(uniqueNewStateStr);
-        queue.push(uniqueNewStateSet);
-
-        // Mark the new state set as visited
-        visited.add(uniqueNewStateStr);
+    for (const symbol of dfa.alphabet) {
+      const moveSet = move(currentSet, symbol);
+      if (moveSet.length === 0) continue;
+      const closureSet = epsilonClosureSet(moveSet);
+      const closureSetStr = JSON.stringify(closureSet);
+      if (!dfa.stateMapping[closureSetStr]) {
+        const name = getStateName(closureSet);
+        dfa.states.push(closureSetStr);
+        dfa.stateMapping[closureSetStr] = { name, originalStates: closureSet };
+        queue.push(closureSet);
+        visited.add(closureSetStr);
+        if (closureSet.some((s) => finalStates.includes(s))) {
+          dfa.finalStates.push(name);
+        }
       }
-    });
-
-    // If any state in the current state set is a final state,
-    // add the current state set to DFA final states
-    if (currentStateSet.some((state) => nfa.finalStates.includes(state))) {
-      dfa.finalStates.push(currentStateStr);
+      dfa.transitions.push([
+        symbol,
+        currentName,
+        dfa.stateMapping[closureSetStr].name,
+      ]);
     }
   }
 

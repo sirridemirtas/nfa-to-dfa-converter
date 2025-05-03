@@ -59,10 +59,12 @@ export const NFATransitionTable = () => {
               </td>
               {uniqueSymbols.map((symbol) => (
                 <td key={symbol}>
+                  {"{"}
                   {state.transitions
                     .filter(([s, src, _t]) => s === symbol && src === source)
                     .map(([_symbol, _source, target]) => target)
                     .join(", ")}
+                  {"}"}
                 </td>
               ))}
             </tr>

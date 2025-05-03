@@ -25,6 +25,7 @@ import { nfaToDfa } from "../lib/nfaToDfa";
 export const DFATransitionTable = () => {
   const { state } = useContext(AppContext);
   const tableData = nfaToDfa(state);
+  const { stateMapping } = tableData;
 
   return (
     <div className="table tableDFA">
@@ -42,29 +43,48 @@ export const DFATransitionTable = () => {
           </tr>
         </thead>
         <tbody>
-          {tableData.states.map((source) => (
-            <tr key={source}>
-              <td>
-                {JSON.parse(source).join("") === state.startState ? "→" : ""}
-                {JSON.parse(source).map((s) =>
-                  state.finalStates.includes(s) ? "*" : ""
-                )}
-                {JSON.parse(source).join(", ")}
-              </td>
-              {tableData.alphabet.map((symbol) => (
-                <td key={symbol}>
-                  {tableData.transitions
-                    .filter(([s, src, _t]) => s === symbol && src === source)
-                    .map(([_symbol, _source, target]) =>
-                      JSON.parse(target).join(", ")
-                    )
-                    .join(", ")}
+          {tableData.states.map((source) => {
+            const srcMap = stateMapping[source];
+            const isStart = tableData.startState === srcMap.name;
+            const isFinal = tableData.finalStates.includes(srcMap.name);
+            return (
+              <tr key={source}>
+                <td>
+                  {isStart ? "→" : ""}
+                  {isFinal ? "*" : ""}
+                  {srcMap.name}
+                  <small> ({srcMap.originalStates.join(", ")})</small>
                 </td>
-              ))}
-            </tr>
-          ))}
+                {tableData.alphabet.map((symbol) => {
+                  const transition = tableData.transitions.find(
+                    ([s, src, _t]) => s === symbol && src === srcMap.name
+                  );
+                  const targetName = transition
+                    ? stateMapping[
+                        Object.keys(stateMapping).find(
+                          (k) => stateMapping[k].name === transition[2]
+                        )
+                      ].name
+                    : "";
+                  return <td key={symbol}>{targetName}</td>;
+                })}
+              </tr>
+            );
+          })}
         </tbody>
       </table>
+      <div className="state-mapping-legend">
+        <h4>State Mapping</h4>
+        <ul>
+          {Object.values(stateMapping).map((m) => (
+            <li key={m.name}>
+              {m.name} = {"{"}
+              {m.originalStates.join(", ")}
+              {"}"}
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 };

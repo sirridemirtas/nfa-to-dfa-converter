@@ -17,7 +17,7 @@ function App() {
 
   useEffect(() => {
     // Save the state to the local storage
-    localStorage.setItem("state", JSON.stringify(state));
+    localStorage.setItem("nfa2dfa_state", JSON.stringify(state));
   }, [state]);
 
   const handleAddState = (e) => {
@@ -165,9 +165,8 @@ function App() {
   };
 
   const loadSampleData = () => {
-    dispatch({
-      type: AppActions.LOAD_SAMPLE_DATA,
-      payload: {
+    const samples = [
+      {
         states: ["A", "B", "C"],
         startState: "A",
         finalStates: ["C"],
@@ -184,6 +183,28 @@ function App() {
         ],
         alphabet: ["0", "1"],
       },
+      {
+        states: ["q0", "q1", "q2"],
+        startState: "q0",
+        finalStates: ["q0"],
+        transitions: [
+          ["ε", "q0", "q2"],
+          ["b", "q0", "q1"],
+          ["a", "q1", "q1"],
+          ["a", "q1", "q2"],
+          ["b", "q1", "q2"],
+          ["a", "q2", "q0"],
+        ],
+        alphabet: ["a", "b"],
+      },
+    ];
+
+    // Toggle between samples
+    const currentSample = state.startState === "A" ? 1 : 0;
+
+    dispatch({
+      type: AppActions.LOAD_SAMPLE_DATA,
+      payload: samples[currentSample],
     });
   };
 
@@ -243,7 +264,7 @@ function App() {
                       id="input_symbol_add"
                       placeholder="Symbol"
                     />
-                    <button
+                    {/* <button
                       type="button"
                       onClick={(e) => {
                         e.preventDefault();
@@ -251,7 +272,7 @@ function App() {
                       }}
                     >
                       ε
-                    </button>
+                    </button> */}
                     <button type="submit">Add</button>
                   </fieldset>
                 </form>
